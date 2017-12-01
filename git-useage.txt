@@ -1,0 +1,51 @@
+//应用文件变动
+git apply xx.diff
+
+
+//git 提交代码
+git remote add gerrit ssh://author@scgit.xxx.com:29418/av-restricted/platform/hardware/amlogic/omx
+repo sync . (更新当前代码库)
+git add drivers/display/osd/osd_fb.c
+git commit --amend       (shift+;  wq)
+git push gerrit HEAD:refs/for/master(master可替换成你准备提交到的分支)
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>> git 撤销操作 >>>>>>>>>>>>>>>>>>>>>>>
+（1）丢弃工作区的修改：git checkout -- filename
+ (2) 修改了工作区的某一个文件内容，还添加到了暂存区，想要丢弃，分两步：a. 使用命令 git reset HEAD filename, 回到（1），然后按（1）操作
+（3）已经提交不合适的修改到版本库，如果撤销，可以在没有推送到远程仓库时 回退版本: git reset --hard commit_id
+
+
+  git checkout .                 ##本地所有修改但是并未commit,都返回到原始状态
+  git stash                      ##把所有并未commit的修改暂存到stash里面，可使用 git stash pop 恢复
+  git reset --hard  commit-id    ##返回到某一个节点，不保留修改
+  git reset --soft  commit-id    ##返回到某一个节点，保留修改
+
+  git branch -D xx               ##删除某一分支
+
+<<<<<<<<<<<<<<<<<<<<<<<< git 撤销操作 <<<<<<<<<<<<<<<<<<<<<<<<
+
+//gerrit code review
+http://wiki-china.amlogic.com/Platform/Kernel/3.14/Porting_Guide
+
+1. 切换到待提交的分支
+2. git pull
+3. git add /your/file
+4. git commit -s
+5. git push /remote/branch
+6. add code reviewer
+
+
+<<<<<<<<<<<<<<<<<< 修改已commit的作者和邮箱名 <<<<<<<<<<<<<<<<<<
+
+第一步：前往需要修改的版本
+1、使用 git log 获取需要修改的版本id
+2、使用 git reset –soft [版本号] 前往版本
+
+第二步：修改信息
+使用  git commit --amend --author='用户名 <邮箱>' 修改
+在打开的文件中保存一下就可以了
+
+第三步：提交代码
+使用 git push
+
