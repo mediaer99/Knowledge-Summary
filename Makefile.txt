@@ -1,0 +1,210 @@
+********************  Makefile中的 $@  $^  $<  $?  ****************************
+$@ : 表示目标文件
+$^ : 表示所有的依赖文件
+$< : 表示第一个依赖文件
+$? : 表示比目标还要新的依赖文件列表
+
+******************* Makefile依赖描述 ***********************
+标签：依赖列表
+	模块编译语句
+
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 示例代码片段 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+INCLUDE_PATH = -I/usr/local/include
+BUILD_DIR = ./build
+ALL_OBJ_O = $(BUILD_DIR)/demo.o  $(BUILD_DIR)/ArrayUtils.o
+TARGET = demo
+CC = gcc
+
+
+start: prepare  $(TARGET)
+
+prepare: 
+	mkdir -p $(BUILD_DIR)
+
+$(TARGET): $(ALL_OBJ_O)
+	$(CC) -o $@ $(ALL_OBJ_O)
+
+$(BUILD_DIR)/demo.o: demo.c
+	$(CC) -o $@ -c $<
+
+$(BUILD_DIR)/ArrayUtils.o: ArrayUtils.c ArrayUtils.h
+	$(CC) -c $< -o $@
+
+clean:
+	rm -rf $(BUILD_DIR)
+	rm -rf ./$(TARGET)
+
+
+
+xxxxxxxxxxxxxxxxxxxxxxxx Makefile与pkg-config xxxxxxxxxxxxxxxxxxxxxxxx
+#OBJS_SRC_FILE
+OBJ_SOURCE = player_audio.c
+#OBJS specifies which files to compile as part of the project
+OBJS_O =  player_audio.o
+#OBJ_NAME specifies the name of our exectuable
+TARGET = player_audio
+ 
+#CC specifies which compiler we're using
+CC = gcc
+ 
+#COMPILER_FLAGS specifies the additional compilation options we're using
+# -w supresses all warnings
+CFLAGS = -w
+ 
+ 
+#>>The pkg-config output can easily be used on the compiler command line.
+#>>Assuming the x library has a x.pc pkg-config file.
+#pkg-config useage:
+# gcc `pkg-config --cflags --libs xx` -o myapp myapp.c
+ 
+
+ INCLUDES:=$(shell pkg-config --cflags libavformat libavcodec libswresample libswscale libavutil sdl2)
+ LDFLAGS:=$(shell pkg-config --libs libavformat libavcodec libswresample libswscale libavutil sdl2) -lm
+  
+ $(TARGET): $(OBJS_O)
+          $(CC) $(CFLAGS) -o $@ $<  $(INCLUDES) $(LDFLAGS) 
+  
+ $(OBJS_O): $(OBJ_SOURCE)
+ 	      $(CC) $(CFLAGS) -c $<
+  
+ clean:
+          rm -rf $(OBJS_O) $(TARGET)
+  
+
+xxxxxxxxxxxxxxxxxxxx Makefile对多文件多目录进行编译 xxxxxxxxxxxxxxxxxxxxxx在做项目时，一般文件都会分几个目录来存放；基本的是  include/  bin/ src/ obj/ lib/ tools/，这几个文件；我先说下我的文件存放目录，用ls -R可以查看到所有文件：./include/common.h    ./src/main.c    ./src/printStatus.c  就三个文件，其中*.c 文件都依赖于 *.h文件；
+        同样的先上第一版makefile：
+
+CC=gcc  
+objects=obj/main.o obj/printStatus.o  
+  
+bin/main:$(objects)  
+   $(CC) -o bin/main $(objects)  
+  
+obj/main.o:src/main.c include/common.h  
+   $(CC) -o obj/main.o -c src/main.c -Iinclude  
+  
+obj/printStatus.o:src/printStatus.c include/common.h  
+   $(CC) -o obj/printStatus.o -c src/printStatus.c -Iinclude  
+  
+clean:  
+   rm -rf $(objects) bin/main  
+        上面的makefile就是gcc命令的拼凑起来的，下面来分享下比较通用的多目录下的makefile；
+        在看多目录的makefile时，先来理解下几个函数和变量；
+函数：
+        wildcard 这是扩展通配符函数，功能是展开成一列所有符合由其参数描述的文 件名，文件间以空格间隔；比如：罗列出src下的所有.c文件：$(wildcard ${SRC}/*.c)
+        patsubst 这是匹配替换函数， patsubst （ 需要匹配的文件样式，匹配替换成什么文件，需要匹配的源文件）函数。比如：用src下的*.c替换成对应的 *.o文件存放到obj中：$(patsubst  %.c, ${OBJ}/%.o, $(notdir $(SOURCE)))
+        notdir 这是去除路径函数，在上面patsubst函数中已经使用过，去除SOURCE中文件的所有目录，只留下文件名；
+
+变量：
+        $@:表示目标文件；一般是在规则中这么用：gcc  -o $@  $(object)；
+        $^:表示所有依赖文件；一般是在规则中这么用：gcc -o $@  $^  ；用所有依赖文件链接成目的文件；
+        $<:表示第一个依赖文件；在规则中使用：gcc -o $@ -c $< ；其实这个时候就是每个依赖文件生成一个目的文件；
+
+第二版makefile
+
+#把所有的目录做成变量，方便修改和移植   
+BIN = ./bin  
+ SRC = ./src  
+ INC = ./include  
+ OBJ = ./obj  
+   
+#提前所有源文件(即：*.c文件)和所有中间文件(即：*.o)  
+ SOURCE = $(wildcard ${SRC}/*.c)  
+ OBJECT = $(patsubst %.c,${OBJ}/%.o,$(notdir ${SOURCE}))  //  BINJECT = $(patsubst %.c, %, $(SOURCE)) 
+   
+#设置最后目标文件  
+ TARGET = main  
+ BIN_TARGET = ${BIN}/${TARGET}  
+   
+ CC = gcc   
+ CFLAGS = -g -Wall -I${INC}   
+   
+#用所有中间文件生成目的文件，规则中可以用 $^替换掉 ${OBJECT}  
+ ${BIN_TARGET}:${OBJECT}  
+     $(CC) -o $@ ${OBJECT}  
+   
+#生成各个中间文件  
+ ${OBJ}/%.o:${SRC}/%.c   
+     $(CC) $(CFLAGS) -o $@ -c $<  
+   
+ .PHONY:clean  
+ clean:  
+     find $(OBJ) -name *.o -exec rm -rf {} \; #这个是find命令，不懂的可以查下资料  
+     rm -rf $(BIN_TARGET)  
+        这个makefile的好处就是通用性，里面不涉及到具体的文件名，当你往src目录中添加新文件时，可以不需要修改makefile，所以这是个非常好的工具
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+在做项目时，一般文件都会分几个目录来存放；基本的是  include/  bin/ src/ obj/ lib/ tools/，这几个文件；我先说下我的文件存放目录，用ls -R可以查看到所有文件：./include/common.h    ./src/main.c    ./src/printStatus.c  就三个文件，其中*.c 文件都依赖于 *.h文件；
+        同样的先上第一版makefile：
+
+CC=gcc  
+objects=obj/main.o obj/printStatus.o  
+  
+bin/main:$(objects)  
+   $(CC) -o bin/main $(objects)  
+  
+obj/main.o:src/main.c include/common.h  
+   $(CC) -o obj/main.o -c src/main.c -Iinclude  
+  
+obj/printStatus.o:src/printStatus.c include/common.h  
+   $(CC) -o obj/printStatus.o -c src/printStatus.c -Iinclude  
+  
+clean:  
+   rm -rf $(objects) bin/main  
+        上面的makefile就是gcc命令的拼凑起来的，下面来分享下比较通用的多目录下的makefile；
+        在看多目录的makefile时，先来理解下几个函数和变量；
+函数：
+        wildcard 这是扩展通配符函数，功能是展开成一列所有符合由其参数描述的文 件名，文件间以空格间隔；比如：罗列出src下的所有.c文件：$(wildcard ${SRC}/*.c)
+        patsubst 这是匹配替换函数， patsubst （ 需要匹配的文件样式，匹配替换成什么文件，需要匹配的源文件）函数。比如：用src下的*.c替换成对应的 *.o文件存放到obj中：$(patsubst  %.c, ${OBJ}/%.o, $(notdir $(SOURCE)))
+        notdir 这是去除路径函数，在上面patsubst函数中已经使用过，去除SOURCE中文件的所有目录，只留下文件名；
+
+变量：
+        $@:表示目标文件；一般是在规则中这么用：gcc  -o $@  $(object)；
+        $^:表示所有依赖文件；一般是在规则中这么用：gcc -o $@  $^  ；用所有依赖文件链接成目的文件；
+        $<:表示第一个依赖文件；在规则中使用：gcc -o $@ -c $< ；其实这个时候就是每个依赖文件生成一个目的文件；
+
+
+
+第二版makefile
+
+#把所有的目录做成变量，方便修改和移植   
+BIN = ./bin  
+ SRC = ./src  
+ INC = ./include  
+ OBJ = ./obj  
+   
+#提取所有源文件(即：*.c文件)和所有中间文件(即：*.o)  
+ SOURCE = $(wildcard ${SRC}/*.c)  
+ OBJECT = $(patsubst %.c,${OBJ}/%.o,$(notdir ${SOURCE}))  
+   
+#设置最后目标文件  
+ TARGET = main  
+ BIN_TARGET = ${BIN}/${TARGET}  
+   
+ CC = gcc   
+ CFLAGS = -g -Wall -I${INC}   
+   
+#用所有中间文件生成目的文件，规则中可以用 $^替换掉 ${OBJECT}  
+ ${BIN_TARGET}:${OBJECT}  
+     $(CC) -o $@ ${OBJECT}  
+   
+#生成各个中间文件  
+ ${OBJ}/%.o:${SRC}/%.c   
+     $(CC) $(CFLAGS) -o $@ -c $<  
+   
+ .PHONY:clean  
+ clean:  
+     find $(OBJ) -name *.o -exec rm -rf {} \; #这个是find命令，不懂的可以查下资料  
+     rm -rf $(BIN_TARGET)  
+        这个makefile的好处就是通用性，里面不涉及到具体的文件名，当你往src目录中添加新文件时，可以不需要修改makefile，所以这是个非常好的工具
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
+
+

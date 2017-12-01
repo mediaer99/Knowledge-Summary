@@ -1,0 +1,83 @@
+/*************************
+ * make
+ /
+
+ make all			: Build programs, libraries, documentation, etc.(same as make).
+
+ make install		: Install what needs to be installed, copying the files from the package's tree 
+ 				      to system-wide directories
+
+ make install-strip : same as make install,then strip debugging symbols.some users like to 
+ 					  trade space for useful bug reports...
+
+ make uninstall		: The opposite of make install: erase the installed files. 
+  				      (This needs to be run from the same build tree was installed.)
+
+ make distclean     : Additionally erase anything ./configure created.
+
+ make check			: Run the test suite, if any.
+
+ make installcheck  : check the installed programs or libraries, if supported.
+
+ make dist          : Recreate package-version.tar.gz from all the source files.
+
+
+
+*********************** How to use automake ***********************
+
+1. Write your program, keeping portability in mind. Create "Makefile.in"
+2. Run "autoscan"
+3. Rename "configure.scan"  to "configure.ac"
+4. Run "autoheader"
+5. Run "autoconf"
+6. "./configure"
+7. Check "config.h". If necessary, modify source and repeat from step #2.
+8. And lastly, compile and run!
+
+a. Create “Makefile.am”.
+b. Run “automake”.
+c. Fix error messages.
+d. Run “aclocal”=.
+e. Autoconf everything.
+f. Configure, compile, and enjoy!
+
+
+
+*********************** How to use Autoconf and Automake ***********************
+
+1. Create your sources. (Be sure to have a simple “Makefile” to help Autoconf autodetect things better.)
+2. Run “autoscan” to generate “configure.scan”.
+3. Rename “configure.scan” to “configure.ac”.
+4. Run “autoheader” to generate “config.h.in”.
+5. Make your source portable by looking at “config.h.in”. (We previously did this at a later step by reading “config.h”, but we can do it in this step by referring to “config.h.in” instead.)
+
+6. Create “Makefile.am”.
+7. Run “automake”.
+8. Fix errors and run “automake” again.
+9. Run “aclocal”.
+10.Run “autoconf”.
+11.Configure, make, and run!
+
+
+
+*********************** How to compile fdk-aac by source code **************************
+
+git clone --depth 1 git://github.com/mstorsjo/fdk-aac.git
+cd fdk-aac
+autoreconf -fiv
+./configure --prefix="$HOME/ffmpeg_build" --disable-shared
+make
+make install
+make distclean
+
+FFmpeg编译选项：./configure --enable-libfdk-aac (additionally --enable-nonfree if you're also using --enable-gpl)
+
+
+
+/*************** GCC Compile options ********************/
+gcc -o target src0.o src1.o src2.o -L/usr/local/lib/pam -lpam
+gcc -o app app.o -L. -ltest
+
+gcc -c -I ../include rec.cpp
+
+
