@@ -49,3 +49,8 @@ http://wiki-china.amlogic.com/Platform/Kernel/3.14/Porting_Guide
 第三步：提交代码
 使用 git push
 
+<<<<<<<<<<<<<<<<<<<<<<<<<< git忽略某一文件 <<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+在版本库中创建.gitignore文件，将不需要跟踪的文件添加到该文件中,然后在
+git status时不会再提示跟踪 .gitignore 中的文件
+
