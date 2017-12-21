@@ -1,9 +1,9 @@
-//应用文件变动
+###### 应用文件变动 ######
 git apply xx.diff
 
 
-//git 提交代码
-git remote add gerrit ssh://author@scgit.xxx.com:29418/av-restricted/platform/hardware/amlogic/omx
+###### git 提交omx库代码示例 ######
+git remote add gerrit ssh://user@scgit.xxx.com:29418/av-restricted/platform/hardware/google/omx
 repo sync . (更新当前代码库)
 git add drivers/display/osd/osd_fb.c
 git commit --amend       (shift+;  wq)
@@ -26,7 +26,7 @@ git push gerrit HEAD:refs/for/master(master可替换成你准备提交到的分�
 <<<<<<<<<<<<<<<<<<<<<<<< git 撤销操作 <<<<<<<<<<<<<<<<<<<<<<<<
 
 //gerrit code review
-http://wiki-china.amlogic.com/Platform/Kernel/3.14/Porting_Guide
+http://wiki-china.google.com/Platform/Kernel/3.14/Porting_Guide
 
 1. 切换到待提交的分支
 2. git pull
@@ -53,4 +53,15 @@ http://wiki-china.amlogic.com/Platform/Kernel/3.14/Porting_Guide
 
 在版本库中创建.gitignore文件，将不需要跟踪的文件添加到该文件中,然后在
 git status时不会再提示跟踪 .gitignore 中的文件
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<< git中删除文件 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+在被 git 管理的目录中删除文件时，可以选择如下两种方式来记录删除动作：
+一、rm + git commit -am "abc"
+二、git rm + git commit -m "abc"
+
+//跟踪某一分支
+git checkout branch_to_pull -t 
+
+
 
