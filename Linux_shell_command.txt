@@ -1,0 +1,5 @@
+###### cp命令总结 ###### 
+-u, --update
+copy only when the SOURCE file is newer than the destination file or when the destination file is missing
+
+
