@@ -64,4 +64,44 @@ git status时不会再提示跟踪 .gitignore 中的文件
 git checkout branch_to_pull -t 
 
 
+###################### 分支操作 ######################
+1. 如果在两个不同的分支之中，对同一个文件的同一个部分进行了不同的修改，Git没法干净的合并它们
+任何因包含合并冲突而有待解决的文件，都会以未合并状态标识出来。 Git 会在有冲突的文件中加入标准的冲突
+解决标记，这样你可以打开这些包含冲突的文件然后手动解决冲突
+
+<<<<<<< HEAD:index.html
+<div id="footer">contact : email.support@github.com</div>
+=======
+<div id="footer">
+please contact us at support@github.com
+</div>
+>>>>>>> iss53:index.html
+
+这表示 HEAD 所指示的版本（也就是你的 master 分支所在的位置，因为你在运行 merge 命令的时候已经检出
+到了这个分支）在这个区段的上半部分（======= 的上半部分），而 iss53 分支所指示的版本在 ======= 的
+下半部分。 为了解决冲突，你必须选择使用由 ======= 分割的两部分中的一个，或者你也可以自行合并这些内
+容
+
+2. 删除某一分支
+git branch -d  "branch_name"
+
+3.
+
+
+###################### git 删除操作 ######################
+//rm 只是删除工作区，未“提交”, 没有删除暂存区的文件
+rm test.txt
+//git rm 相当于执行了两步
+rm test.txt       --> 删除工作区内容
+git add test.txt  --> 更新到暂存区
+
+
+
+
+
+
+
+
+
+
 
