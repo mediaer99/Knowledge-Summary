@@ -1,1 +1,1 @@
-Knowledge-Summary & simple
+Knowledge-Summary and simple
