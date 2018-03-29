@@ -1,0 +1,95 @@
+1.  提取 Out PTS、In PTS
+
+
+
+import re
+import os
+import sys
+
+
+def get_In_Out_Pts(filename,in_out):
+    with open(filename, 'r') as f0:
+        with open('pts.txt', 'w') as f1:
+            if in_out == 'out': 
+                key = re.compile('Out PTS: (.*)..vf')
+            elif in_out == 'in':
+                key = re.compile('In PTS (.*),  ')
+            for line in f0.readlines():
+                value = re.search(key, line)
+                if value != None:
+                    #ret = value.group().strip()
+                    ret = value.group() #for window os
+                    if in_out == 'out':
+                        ret = ret.replace('Out PTS: ','')
+                        ret = ret.replace('vf','')
+                        ret = ret.replace('.','')
+                        f1.write(ret+'\r\n')
+                    elif in_out == 'in':
+                        ret = ret.replace('In PTS ','')
+                        ret = ret.replace(',','')
+                        f1.write(ret+'\r\n')
+
+if __name__ == '__main__':
+    filename = sys.argv[1]
+    in_out = sys.argv[2]
+    get_In_Out_Pts(filename,in_out)
+
+
+
+
+
+2.    递归查找目录及子目录下的后缀文件 .img
+
+import os
+import sys
+
+def list_file(path):
+    parents = os.listdir(path)
+    for parent in parents:
+        child = os.path.join(path, parent)
+        if os.path.isdir(child):
+            list_file(child)
+        else:
+            if child.endswith('.img'):
+                print("%s" %child)
+            
+
+if __name__ == "__main__":
+    list_file(r'C:\Users\kunpeng.tang\Desktop\BUG')
+    os.system('pause')
+
+
+3.    每次修改omx后的git操作
+
+import os
+import subprocess
+
+#get result of 'git status'
+status0,srcCmd = subprocess.getstatusoutput("git status")
+
+if status0 != 0:
+    print("git status failed!")
+    exit() 
+
+#get every line of srcCmd
+gitCmd = ''
+Src = srcCmd.split('\n')
+#print('Src: ', Src)
+
+#remove modified:
+for line in Src:
+    if 'modified:' in line:
+        gitCmd = gitCmd + ' ' + line.replace('modified:', '')
+        #print(gitCmd)
+
+while True:
+    cmd = input('Input your git command(\'q\' to quit): ')
+    if cmd == 'q':
+        break
+    cmd = cmd + ' ' + gitCmd + '\n'
+    #print(cmd)
+    status1 = os.system(cmd)
+    if status1 == 0:
+        print('Executing successed!')
+
+
