@@ -8,8 +8,13 @@ import sys
 
 
 def get_In_Out_Pts(filename,in_out):
+    if in_out == 'in':
+        ptsfile = 'in_pts.txt'
+    elif in_out == 'out':
+        ptsfile = 'out_pts.txt'
+
     with open(filename, 'r') as f0:
-        with open('pts.txt', 'w') as f1:
+        with open(ptsfile, 'w') as f1:
             if in_out == 'out': 
                 key = re.compile('Out PTS: (.*)..vf')
             elif in_out == 'in':

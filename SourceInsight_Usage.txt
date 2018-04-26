@@ -1,0 +1,7 @@
+1.已经创建项目，怎样添加新的文件到项目中去
+	$1 直接将代码拷贝到项目中去
+	$2 > project 
+	   > Add and Remove Project Files(选择你添加的原文件，最好放在一个文件夹中，便于查找) 
+	   > Synchronize Files
+
+	
