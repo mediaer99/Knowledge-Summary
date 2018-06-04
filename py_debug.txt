@@ -1,0 +1,70 @@
+def boxPrint(symbol, width, height):
+    if len(symbol) != 1:
+        raise Exception('Symbol must be a single character string.')
+    if width <= 2:
+        raise Exception('Width must be greater than 2.')
+    if height <= 2:
+        raise Exception('Height must be grater than 2.')
+    print(symbol * width)
+    for i in range(height - 2):
+        print(symbol + (' ' * (width -2)) + symbol)
+    print(symbol * width)
+
+'''
+for sym, w, h in (('*', 4, 4), ('0', 20, 5), ('x', 1, 3), ('ZZ', 3, 3)):
+    try:
+        boxPrint(sym, w, h)
+    except Exception as err:
+        print('An exception happened: ' + str(err))
+'''
+
+'''
+import time
+def calcProd():
+    product = 1
+    for i in range(1, 100000):
+        product = product * i
+    return product
+
+startTime = time.time()
+prod = calcProd()
+endTime = time.time()
+print('The result is %s digits long.' % (len(str(prod))))
+print('Took %s seconds to calculate.' % (endTime - startTime))
+'''
+
+'''
+import threading, time
+print('Start of program.')
+
+def takeANap():
+    time.sleep(5)
+    print('Wake up!')
+
+threadObj = threading.Thread(target=takeANap)
+threadObj.start()
+print('End of program.')
+'''
+
+'''
+#coding:utf-8
+def foo(arg1, *tupleArg, **dictArg):
+    print('arg1=',arg1)
+    print('tupleArg=', tupleArg)
+    print('dictArg=', dictArg)
+
+foo('formal_args')
+'''
+
+import subprocess,time
+def openCalc():
+    while True:
+        subprocess.Popen('C:\\Windows\\System32\\calc.exe')
+        time.sleep(5)
+
+openCalc()
+
+
+
+
+
