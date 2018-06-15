@@ -17,12 +17,10 @@ def git_add_commit_chmod():
     print("********* %s ********* \n%s" % ("git status",srcCmd))
     #get every line of srcCmd
     Src = srcCmd.split('\n')
-    #print('Src: ', Src)
     #remove modified:
     for line in Src:
         if 'modified:' in line:
             gitCmd = gitCmd + ' ' + line.replace('modified:', '')
-            #print(gitCmd)
             
     while True:
         cmd = input('Input your git command(\'q\' to quit): ')
@@ -133,6 +131,7 @@ def omx_so_push(version, product):
 
 
 if __name__ == '__main__':
+    #add argv check
     print("\nUsage argv[1]: version(8.1)  argv[2]: product(p212)\n")
     if sys.argv[1] == None:
         print("please input version info(7.1/8.0/8.1/...)")
