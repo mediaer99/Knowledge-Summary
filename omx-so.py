@@ -21,6 +21,8 @@ def git_add_commit_chmod():
     for line in Src:
         if 'modified:' in line:
             gitCmd = gitCmd + ' ' + line.replace('modified:', '')
+        if 'new file:'  in  line:
+             gitCmd = gitCmd + ' ' + line.replace('new file:', '')
             
     while True:
         cmd = input('Input your git command(\'q\' to quit): ')
@@ -101,7 +103,7 @@ def omx_so_push(version, product):
     #current directory
     curr_init_dir = os.getcwd()
     #directory to commit omx so
-    push_cd_dir = curr_init_dir + '/vendor/amlogic/prebuilt/libstagefrighthw/lib/'
+    push_cd_dir = curr_init_dir + '/vendor/xxx/prebuilt/libstagefrighthw/lib/'
     #directory to produce omx so
     compil_lib_dir = curr_init_dir + "/out/target/product/" + product + "/vendor/lib"
     
