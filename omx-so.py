@@ -21,6 +21,8 @@ def git_add_commit_chmod():
     for line in Src:
         if 'modified:' in line:
             gitCmd = gitCmd + ' ' + line.replace('modified:', '')
+        if 'new file:'  in  line:
+             gitCmd = gitCmd + ' ' + line.replace('new file:', '')
             
     while True:
         cmd = input('Input your git command(\'q\' to quit): ')
