@@ -229,10 +229,5 @@ make会将整个makefile展开后，再决定变量的值。也就是说，变�
 
 在上例中，y的值将会是 foo bar ，而不是 xyz bar 了
 
-access.c
-ORW.c
-open.c
-
-
 
 

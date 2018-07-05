@@ -22,16 +22,25 @@ def get_In_Out_Pts(filename,in_out):
                     if value != None:
                         ret = value.group().strip()
                         if in_out == 'out':
-                            ret = ret.replace('Out PTS: ','')
-                            ret = ret.replace('vf','')
-                            ret = ret.replace('.','')
+                            if True:
+                                #method one
+                                ret = re.sub(r'\D+', "", ret)
+                            else:
+                                #method two
+                                ret = ret.replace('Out PTS: ','')
+                                ret = ret.replace('vf','')
+                                ret = ret.replace('.','')
                             f1.write(ret+'\n')
                         elif in_out == 'in':
-                            ret = ret.replace('In PTS ','')
-                            ret = ret.replace(',','')
+                            if True:
+                                ret = re.sub(r'\D+', "", ret)
+                            else:
+                                ret = ret.replace('In PTS ','')
+                                ret = ret.replace(',','')
                             f1.write(ret+'\n')
 
 if __name__ == '__main__':
+    print("Use:  filename  in(out)")
     filename = sys.argv[1]
     in_out = sys.argv[2]
     get_In_Out_Pts(filename,in_out)

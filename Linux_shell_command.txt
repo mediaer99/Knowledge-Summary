@@ -2,4 +2,22 @@
 -u, --update
 copy only when the SOURCE file is newer than the destination file or when the destination file is missing
 
+###### export命令总结 ######
+用于设置或者显示变量
+在shell中执行程序时，shell会提供一组环境变量。export可新增，修改或删除环境变量，供后续执行的程序使用。export的效力仅基于该次登陆操作
+export -p ：打印shell赋予程序的环境变量
 
+###### alias命令总结 ######
+alias ll='ls -l'  //为ll起别名
+unalias ll        //取消ll别名
+
+保存别名配置：
+在 /etc/profile 中添加
+在 ~/.bash_profile 中添加
+
+###### sed命令总结 ###### 
+
+###### awk命令总结 ######
+###### grep命令总结 ######
+###### tee命令总结 ######
+###### indent命令总结 ######
