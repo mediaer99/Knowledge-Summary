@@ -21,3 +21,145 @@ unalias ll        //取消ll别名
 ###### grep命令总结 ######
 ###### tee命令总结 ######
 ###### indent命令总结 ######
+
+
+###### 构建基本脚本 ######
+1. 用户变量
+   var1=10
+   var2=12
+在变量,等号,和值之间不能出现空格
+2. 命令替换
+两种方法将命令输出赋给变量
+ #1 反引号字符(`)
+    testing=`date`   //将date命令的输出赋值给testing
+ #2 $()格式
+    testing=$(date)  //将date命令的输出赋值给testing
+    today=$(date +%y%m%d) //告诉date将日期显示为两位数的年月日组合,比如:180811
+
+3. 输出重定向
+  who > test //重定向who命令输出结果到test
+  如果输出文件已经存在,重定向操作符会使用新的数据覆盖已有文件
+  如果不想覆盖文件原有内容,可以追加到已有文件, (>>)来追加数据
+
+4. 执行数学运算
+ #1 expr 命令
+   expr 5 \* 2  //注意转义符的使用
+ 
+将数学运算结果赋值给一个变量有两种方法:
+var1=10
+var2=20
+var3=$(expr $var2 / $var1)
+echo The result is $var3
+这种方法需要使用命令替换来获取expr的运算结果,另一种较为简便的方法为
+
+在bash中,可以将一个数学运算结果赋值给某一个变量,使用美元符和方括号, $[operation] 将数学表达式围起来
+var1=10
+var2=20
+var3=$[$var2 / $var1]
+
+###### shell结构化命令 ######
+1.基本结构1 
+if command
+then
+    commands
+fi
+
+bash shell的if语句后面命令.如果退出状态码是0(表示执行成功),位于then后面的命令就会执行,否则不执行
+另外一种形式:
+if command; then
+    commands
+fi
+****************************
+if command
+then
+   commands
+else
+   commands
+fi
+****************************
+if command
+then
+   commands
+elif command2
+then
+   more commands
+fi
+****************************
+
+if-then语句不能测试命令退出码之外的条件,可以使用test命令来扩充
+
+****************************
+if test condition    //条件成立,test命令退出返回状态码0,否则退出返回非0退出状态码
+then
+    commands
+fi
+****************************
+test可以测试三类条件:
+@ 数值比较  (eq,ge,gt,le,lt,ne)
+@ 字符串比较 (=, !=, < , >, -n(字符长度是否非0), -z(字符长度是否为0))
+@ 文件比较
+
+
+2. 基本结构2
+
+for命令:
+//////////////////////
+for var in list
+do
+	commands
+done
+//////////////////////
+for (( i=1; i <= 10; i++))
+do
+    echo "The next number is $i"
+done
+//////////////////////
+
+while 命令:
+///////////////////////
+while test command
+do
+   other commands
+done
+//////////////////////
+while [$var1 -gt 0]
+do
+   echo $var1
+   var1=$[ $var1 - 1 ]
+done
+///////////////////////
+
+
+处理循环的输出:
+在shell中,可以对循环的输出使用管道或者重定向
+
+for file in /home/rich/*
+  do
+    if [ -d '$file' ]
+    then
+       echo "$file is a dit=rectory"
+    elif
+       echo "$file is a file"
+    fi
+done > output.txt
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+  
+
