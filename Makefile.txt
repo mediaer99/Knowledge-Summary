@@ -97,9 +97,11 @@ clean:
         notdir 这是去除路径函数，在上面patsubst函数中已经使用过，去除SOURCE中文件的所有目录，只留下文件名；
 
 变量：
-        $@:表示目标文件；一般是在规则中这么用：gcc  -o $@  $(object)；
-        $^:表示所有依赖文件；一般是在规则中这么用：gcc -o $@  $^  ；用所有依赖文件链接成目的文件；
-        $<:表示第一个依赖文件；在规则中使用：gcc -o $@ -c $< ；其实这个时候就是每个依赖文件生成一个目的文件；
+        $@: 表示目标文件；一般是在规则中这么用：gcc  -o $@  $(object)；
+        $^: 表示所有依赖文件；一般是在规则中这么用：gcc -o $@  $^  ；用所有依赖文件链接成目的文件；
+        $<: 表示第一个依赖文件；在规则中使用：gcc -o $@ -c $< ；其实这个时候就是每个依赖文件生成一个目的文件；
+        $*: name of current dependency without extension
+        @?: 
 
 第二版makefile
 
@@ -228,6 +230,137 @@ make会将整个makefile展开后，再决定变量的值。也就是说，变�
     x := xyz
 
 在上例中，y的值将会是 foo bar ，而不是 xyz bar 了
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+编译子目录Makefile的示例,根目录下有bjunion_enc、test_enc两个子文件夹，每个子文件夹下面有Makefile
+
+# object building.
+ifeq ($(ARM), 1)
+CC=arm-none-linux-gnueabi-g++
+AR=arm-none-linux-gnueabi-ar
+else
+CC=gcc
+AR=ar
+endif
+
+DIRS=bjunion_enc test_enc
+
+$(DIRS): ECHO
+  make ARM=1 -C $@
+
+ECHO: 
+  @echo $(DIRS)
+
+
+TARGET=testApi
+AMLENC_LIB=test.o
+LinkIn=libEnc.a
+LDFLAGS += -lm -lrt
+ifeq ($(ARM), 1)
+CFLAGS+=-DARM
+else
+CFLAGS+=-O2 -std=c99
+endif
+
+CFLAGS+= -g -static
+$(TARGET):$(AMLENC_LIB)
+  $(CC) $(CFLAGS) $(AMLENC_LIB) -o $(TARGET) $(LinkIn)
+
+
+$(AMLENC_LIB):%.o:%.cpp
+  $(CC) -c $(CFLAGS) $< -o $@
+
+
+all: $(DIRS) $(TARGET) 
+
+.PHONY:clean     #
+clean:
+  -rm -f *.o       # -rm前面的-表示如果中途出错，会继续执行，比如该条命令执行错误，会继续执行下面这条
+  -rm -f $(TARGET)   
+  $(foreach N,$(DIRS),make clean -C $(N);)  # 执行子目录下的Makefile(执行make clean)
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+总结
+target ...: prerequisites
+            command
+            command
+
+1.makefile中的每个target都代表了一个文件。
+
+2.如果只运行make命令，那么默认执行第一个target
+
+3.执行一个target时，会做两件事情：
+
+　3.1.查看与这个target同名的文件是否存在，如果不存在，那么就运行这个target下面的命令
+
+　3.2.如果与这个target同名的文件已经存在，那么就检查与这个target同名的文件是否需要更新（即target文件的修改时间是否早于依赖文件的修改时间），如果需要更新，那么就运行这个target下面的命令
+
+如果make执行时，带入make参数“-n”或“--just-print”，那么其只是显示命令，但不会执行命令，这个功能很有利于我们调试我们的Makefile，看看我们书写的命令是执行起来是什么样子的或是什么顺序的。
+
+而make参数“-s”或“--slient”则是全面禁止命令的显示
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+文件目录结构
+
+|--Makefile
+|
+|--f1
+|  |---Makefile
+|  |---f1.c
+|--f2
+|  |---Makefile
+|  |---f2.c
+|
+|--include
+|  |---myinclude.h
+|
+|--main
+|  |---Makefile
+|  |---main.c
+|
+|--obj
+|  |---Makefile
+|
+|
+
+------------------------------------------------------------------------------
+
+CC = gcc
+SUBDIRS = f1 \
+      f2 \
+      main \
+      obj
+
+OBJS = f1.o f2.o main.o
+
+BIN = myapp
+
+OBJS_DIR = obj
+BIN_DIR = bin
+export CC OBJS BIN OBJS_DIR BIN_DIR      #传递变量到下级Makefile中
+
+all: CHECK_DIR $(SUBDIRS)
+
+CHECK_DIR:
+  mkdir -p $(BIN_DIR)
+
+$(SUBDIRS): ECHO
+  make -C $@          # make -C 编译子目录Makefile
+
+ECHO:
+  @echo $(SUBDIRS)    # @echo是一句显示命令，"@"字符在命令前面，这个命令将不会被make显示出来，只会显示命令执行后的结果
+  @echo begin compile
+
+CLEAN:
+  $(RM) $(OBJS_DIR)/*.o
+  rm -rf $(BIN_DIR)
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
+
 
 
 
