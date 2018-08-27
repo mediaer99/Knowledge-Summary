@@ -144,9 +144,32 @@ for file in /home/rich/*
 done > output.txt
 
 
+/////////////////////////////// Linux隐藏命令操作历史 /////////////////////////////////////
+1. 在命令前插入空格，这条命令会被shell忽略，前提是环境变量 HISTCONTROL 设置为"ignorespace"或者"ignoreboth"才会起作用
+如果不生效，环境变量需要设置一下，export HISTCONTROL = ignorespace
 
+2. 一劳永逸的做法是：使用软链接，history记录都是存放在 ~/.bash_history文件中，那么我们就可以将写入 ~/.bash_history转移到其他地方
 
- 
+ln -s /dev/null ~/.bash_history   //这样都写入到 /dev/null
+
+恢复history正常做法：
+
+rm -rf ~/.bash_history
+
+注意不是：
+
+rm -rf ~/.bash_history/
+
+如果结尾有"/"，那么源文件也会被删除，只删除软连接的话，不能加"/"
+
+//////////////////////////////// 配置环境变量并使之生效 ///////////////////////////////////////////
+主要两个命令：export、source
+
+export LD_LIBRARY_PATH=/home/ubuntu/opencv-3.1.0/lib:$LD_LIBRARY_PATH
+export PKG_CONFIG_PATH=/home/ubuntu/opencv-3.1.0/lib/pkgconfig:$PKG_CONFIG_PATH
+
+source ~/.bashrc
+
 
 
 

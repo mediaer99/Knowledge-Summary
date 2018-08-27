@@ -168,8 +168,17 @@ git format-patch生成的补丁文件默认从1开始顺序编号，并使用对
 检查能否应用成功：git apply --check newpatch.patch
 打补丁：git am --signoff < newpatch.patch
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+git log -S [keyword]  //搜索提交历史，根据关键词
+
+git log --follow   [file]   //显示某个文件的版本历史，包括文件名改动
+
+git log -p [file]   //显示某个文件每一次的diff
+
+git shortlog -sn    //显示所有提交的用户，按提交次数排序
+
+git show --name-only [commit]  //显示某次提交发生变化的文件名
 
 
 
-
-
+git show [commit]:[filename]  //某次提交某个文件的内容

@@ -204,6 +204,7 @@ BIN = ./bin
         这个makefile的好处就是通用性，里面不涉及到具体的文件名，当你往src目录中添加新文件时，可以不需要修改makefile，所以这是个非常好的工具
 
 .PHONY: (这里是使make将其后面的识别为target，这里就是无视Makefile同目录下的clean文件，因为如果目录下有clean文件，由于其无依赖项，不做任何处理)
+
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Makefile变量赋值
 
@@ -358,8 +359,61 @@ CLEAN:
 
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+CC = gcc
+RM = rm -f
+
+CFLAGS = -std=c99 -Werror
+LDFLAGS = 
+
+BIN = miku
+SRCS = $(wildcard *.c)
+OBJS = $(SRCS:%.c=%.o)
+
+$(BIN): $(OBJS)
+  $(CC) $(LDFLAGS) -o $@ $^
+
+$(OBJS):%.o:%.c
+  $(CC) $(CFLAGS) -o $@ -c $<
+
+.PHONY:clean
+
+clean:
+  $(RM) $(OBJS)
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+src=$(wildcard *.c ./sub/*.c)   #wildcard把 指定目录 ./ 和 ./sub/ 下的所有后缀是c的文件全部展开
+dir=$(notdir $(src))            #notdir把展开的文件去除掉路径信息
+obj=$(patsubst %.c,%.o,$(dir))  #在$(patsubst %.c,%.o,$(dir) )中，patsubst把$(dir)中的变量符合后缀是.c的全部替换成.o
+obj2=$(dir:%.c=%.o)             #效果类似obj，只是另外一种写法
+                                # 这里用到makefile里的替换引用规则,即用指定的变量替换另一个变量,格式是：$(var:a=b) 或 ${var:a=b},把变量var中的每一个值结尾用b替换掉a
 
 
+all:
+  @echo $(src)
+  @echo $(dir)
+  @echo $(obj)
+  @echo $(obj2)
+  @echo "end"
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Pattern Rules
+
+'%' ：can match any nonempty substring
+
+'%.o:%.c' ： says how to make any file stem.o from another file stem.c
+
+'%.c' ：as a pattern matches any file name that ends in '.c'
+
+'s.%.c' ：as a pattern matches any file name that starts with 's.', ends with '.c' and is at least five characters long
+
+-----------------------------------
+%.o : %.c
+  $(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+
+this rule can make any file x.o from x.c
+-----------------------------------
 
 
 
