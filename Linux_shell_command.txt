@@ -180,10 +180,81 @@ export PKG_CONFIG_PATH=/home/ubuntu/opencv-3.1.0/lib/pkgconfig:$PKG_CONFIG_PATH
 
 source ~/.bashrc
 
+//////////////////////////////// screen命令 ///////////////////////////////////////////
+//打开会话
+screen "name"
+//浏览当前的screen会话
+screen -ls
+//关闭screen会话
+screen -X -S name quit
+//恢复上次的screen对话
+screen -ls
+There are screens on:
+7880.session    (Detached)
+7934.session2   (Detached)
+7907.session1   (Detached)
+3 Sockets in /var/run/screen/S-root.
+
+screen -r
+screen -r 7934
+screen -r -S session2
+
+//////////////////////////////// Macro useage ///////////////////////////////////////////
+//A is true and B is false
+#define CHECK1(A,B,...) if ((A)&&!(B)) { printf(__VA_ARGS__); }  // ... 用 __VA_ARGS__ 来代替
+// #, ##
+使用#把宏参数变为一个字符串,用##把两个宏参数贴合在一起
+宏定义里有用'#'或'##'的地方宏参数是不会再展开
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Usage one xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+我们使用#把宏参数变为一个字符串,用##把两个宏参数贴合在一起. 
+用法: 
+#include<cstdio> 
+#include<climits> 
+using namespace std; 
+#define STR(s)     #s 
+#define CONS(a,b)  int(a##e##b) 
+
+int main() 
+{ 
+    printf(STR(vck));           // 输出字符串"vck" 
+    printf("%d ", CONS(2,3));  // 2e3 输出:2000 
+    return 0; 
+} 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxUsage two xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+二、当宏参数是另一个宏的时候 
+需要注意的是凡宏定义里有用'#'或'##'的地方宏参数是不会再展开.
+1, 非'#'和'##'的情况 
+    #define TOW      (2) 
+    #define MUL(a,b) (a*b) 
+printf("%d*%d=%d ", TOW, TOW, MUL(TOW,TOW)); 
+这行的宏会被展开为： 
+    printf("%d*%d=%d ", (2), (2), ((2)*(2))); 
+MUL里的参数TOW会被展开为(2). 
 
 
-
-
+2, 当有'#'或'##'的时候 
+    #define A          (2) 
+    #define STR(s)     #s 
+    #define CONS(a,b)  int(a##e##b) 
+    printf("int max: %s",  STR(INT_MAX));    // INT_MAX #include<climits>
+这行会被展开为： 
+    printf("int max: %s", "INT_MAX"); 
+    printf("%s", CONS(A, A));               // compile error 
+这一行则是： 
+    printf("%s", int(AeA)); 
+INT_MAX和A都不会再被展开, 然而解决这个问题的方法很简单. 加多一层中间转换宏. 
+加这层宏的用意是把所有宏的参数在这层里全部展开, 那么在转换宏里的那一个宏(_STR)就能得到正确的宏参数. 
+    #define A           (2)
+    #define _STR(s)     #s 
+    #define STR(s)      _STR(s)          // 转换宏 
+    #define _CONS(a,b)  int(a##e##b) 
+    #define CONS(a,b)   _CONS(a,b)       // 转换宏 
+    printf("int max: %s", STR(INT_MAX));          // INT_MAX,int型的最大值，为一个变量 #include<climits>
+输出为: int max: 0x7fffffff 
+STR(INT_MAX) -->  _STR(0x7fffffff) 然后再转换成字符串； 
+printf("%d", CONS(A, A)); 
+输出为：200CONS(A, A)  -->  _CONS((2), (2))  --> int((2)e(2))
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 
