@@ -255,6 +255,52 @@ STR(INT_MAX) -->  _STR(0x7fffffff) 然后再转换成字符串；
 printf("%d", CONS(A, A)); 
 输出为：200CONS(A, A)  -->  _CONS((2), (2))  --> int((2)e(2))
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Linux查看系统状态
+//查看系统运行时间
+uotime
+//查看已登录用户
+who
+//查看系统版本相关信息
+uname
+//查看当前环境变量
+export
+//查看目录和文件占用空间
+du -h --max-depth=1 //查看当前目录下每个目录及文件占用空间，--max-depth显示层级
+//查看各挂载点空间
+df
+//查看内存使用情况
+free
+//查看进程内存使用情况
+pmap  pid
+//查看进程之间的关系
+pstree
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+使用gcc生成可执行文件 gcc -g -o cmdTest cmdTest.c
+
+//查看文件基本信息
+file cmdTest
+
+//查看程序依赖库
+ldd  cmdTest
+
+//查看函数或者全局变量是否存在于elf文件中
+nm cmdTest | grep test
+
+//查看各段大小
+size cmdTest 
+    data段：包含静态变量和已经初始化的全局变量的数据段字节数大小
+    bss段：存放程序中未初始化的全局变量的字节数大小
+
+//查看elf文件信息
+readelf -h cmdTest
+
+//反汇编
+objdump -d cmdTest
+
+//定位crash问题
+addr2line -e cmdTest 40053d(出错地址)
+
 
 
 
