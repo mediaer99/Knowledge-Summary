@@ -220,7 +220,7 @@ int main()
     printf("%d ", CONS(2,3));  // 2e3 输出:2000 
     return 0; 
 } 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxUsage two xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Usage two xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 二、当宏参数是另一个宏的时候 
 需要注意的是凡宏定义里有用'#'或'##'的地方宏参数是不会再展开.
 1, 非'#'和'##'的情况 
@@ -301,9 +301,33 @@ objdump -d cmdTest
 //定位crash问题
 addr2line -e cmdTest 40053d(出错地址)
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx shell执行顺序 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+1. ";"
+cmd1;cmd2 //命令之间没有逻辑关系，按先后顺序执行，命令都会执行到，cmd1失败会继续cmd2
 
+2. "&&"
+cmd1 && cmd2 //按顺序从前往后执行，但只有cmd1正确执行才会继续cmd2, "$?"保存命令执行结果是否正确
 
+3. "||"
+cmd1 || cmd2 //按照顺序执行，但是如果cmd1成功，不会执行cmd2，cmd1不成功则执行cmd2
 
+"&&" 和 "||" 都是短路开关
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  shell父子进程关系  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+进程列表：
+
+pwd; ls; cd /etc; pwd; cd ; ls     //命令可以依次执行
+(pwd; ls; cd /etc; pwd; cd ; ls)   //包含在括号中，就是进程列表，会生成一个子shell进程执行命令
+(cmd) //命令分组，创建子进程执行
+{cmd;} //命令分组，不创建子进程执行
+
+在shell脚本中，经常使用子shell进行多进程处理，但是过多的子进程会明显拖慢处理速度，在交互式CLI shell中
+，子shell存在同样问题，它并非真正的多进程，因为终端控制子shell的I/O
+
+后台模式中执行命令可以在处理命令的同时让出CLI,以供其他交互命令执行，好比将前台操作界面让出来，执行其他操作
+
+shell子进程除了让出终端，还有什么好处？
 
 
 
