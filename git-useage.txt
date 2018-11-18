@@ -182,3 +182,32 @@ git show --name-only [commit]  //显示某次提交发生变化的文件名
 
 
 git show [commit]:[filename]  //某次提交某个文件的内容
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx git rebase xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+简要概括为：可以对某一段线性提交历史进行编辑、删除、复制、粘贴
+
+1.使用git rebase 合并多个commit为一个commit
+
+	git rebase -i (start_commit _id  end_commit_id]
+
+pick：  保留该commit（缩写:p）
+reword：保留该commit，但我需要修改该commit的注释（缩写:r）
+edit：  保留该commit, 但我要停下来修改该提交(不仅仅修改注释)（缩写:e）
+squash：将该commit和前一个commit合并（缩写:s）
+fixup： 将该commit和前一个commit合并，但不要保留该提交的注释信息（缩写:f）
+exec：  执行shell命令（缩写:x）
+drop：  我要丢弃该commit（缩写:d)
+
+
+2. 使用git rebase将某一段commit(多个)粘贴到另一个分支上
+
+	git rebase   (start_commit _id  end_commit_id]  --onto  master
+
+比如：将test分支的 cmtid_0 ~ cmtid_6 合并到master分支
+	git rebase   cmtid_0^  cmtid_6  --onto  master //考虑左开右闭区间
+
+	
+
+
+
