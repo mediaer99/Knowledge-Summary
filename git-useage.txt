@@ -1,4 +1,4 @@
-###### 应用文件变动 ######
+﻿###### 应用文件变动 ######
 git apply xx.diff
 
 ############################## git reset & revert ##################################
@@ -208,6 +208,56 @@ drop：  我要丢弃该commit（缩写:d)
 	git rebase   cmtid_0^  cmtid_6  --onto  master //考虑左开右闭区间
 
 	
+xxxxxxxxxxxxxxxxxxxxxxx git 分支总结 xxxxxxxxxxxxxxxxxxxxxx
+ //查看各个分支当前所指对象
+git log --decorate 
 
+HEAD 可以想象为当前分支的别名，git使用HEAD指针确认当前所在分支
 
+//HEAD指针指向testing分支了
+git checkout testing  
 
+//输出提交历史，各个分支的指向以及项目的分支分叉情况
+git log --oneline --decorate --graph --all
+
+"master" 是运行git init 时默认的起始分支名字
+"origin"  是当你运行git clone时默认的远程仓库的名字，例如：origin/master
+
+//更新远程仓库
+git fetch origin
+
+//查看本地分支与远程分支的提交进度
+git branch -vv
+
+//rebase命令将提交到某一个分支的所有修改都移至另外一个分支
+//变基是将一系列提交按照原有次序依次应用到另外一个分支上
+假设当前分支为：experiment
+目标基底分支为：master
+
+git checkout experiment
+git rebase master
+git checkout master
+git merge experiment
+
+//取出client分支，找出处于client分支和server分支的共同祖先之后的修改
+//然后把它们在master分支上重演一遍
+
+git rebase --onto master server client
+
+//将server分支的修改整合到master分支
+git rebase master server
+//然后快进合并到master分支
+git checkout master
+git merge server
+
+//创建分支new_branch并使其指向 ab1f23da (commit_id)
+git checkout new_branch  ab1f23da 
+
+//下述命令会在你的 .git/config 文件中添加一个小节，并在其中指定远程版本库的名称（origin）、URL 和
+//一个用于获取操作的引用规格（refspec）
+ git remote add origin https://github.com/schacon/simplegit-progit
+
+//添加小节如下
+[remote "origin"]
+	url = https://github.com/schacon/simplegit-p
+	fetch = +refs/heads/*:refs/remotes/origin
