@@ -207,6 +207,8 @@ drop：  我要丢弃该commit（缩写:d)
 比如：将test分支的 cmtid_0 ~ cmtid_6 合并到master分支
 	git rebase   cmtid_0^  cmtid_6  --onto  master //考虑左开右闭区间
 
+3.HEAD detached at 86b3e19
+如何删除
 	
 xxxxxxxxxxxxxxxxxxxxxxx git 分支总结 xxxxxxxxxxxxxxxxxxxxxx
  //查看各个分支当前所指对象

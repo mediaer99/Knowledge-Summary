@@ -330,10 +330,54 @@ pwd; ls; cd /etc; pwd; cd ; ls     //命令可以依次执行
 shell子进程除了让出终端，还有什么好处？
 
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Linux文件权限 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+1. 添加新用户
+useradd
+2. 删除用户
+userdel
+3. usermod
+修改/etc/passwd中的大部分字段
+4. 创建新组
+groupadd
+5. 修改组
+groupmod
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Linux数据呈现 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Linux文件描述符
+0   STDIN   标准输入
+1   STDOUT  标准输出
+2   STDERR  标准错误
 
+<  输入重定向符号，Linux会重定向到指定的文件来替换标准输入文件的描述符
+>  输出重定向符号，Linux会重定向原本显示在显示器上的内容到重定向文件
+>> 追加文件
 
+使用实例：
+ls -al testfile  2>logErr 1>logNormal  //将STDERR重定向到logErr文件，STDOUT重定向到log文件
 
+ls -al testfile &>log  //将STDERR和STDOUT重定向到同一个输出文件，错误显示在log中靠前位置
+
+ls -al testfile >&2  //重定向到文件描述符，在文件描述符前面添加&
+
+ls -al testfile >/dev/null  //什么都不输出
+
+cat  /dev/null  > testfile   // 由于/dev/null不包含任何文件，可以用来快速清除文件
+
+date | tee testfile      //输出到STDOUT，同时输出到testfile文件
+date | tee -a testfile   //同上，同时表示追加到文件
+
+./test.sh &   //后台运行脚本，但是仍然会使用显示器来显示STDOUT、STDERR信息
+
+//每次启动新作业时，Linux系统都会为其分配一个新的作业号和PID，在终端会话中使用后台进程需要注意
+//每一个后台进程都和终端会话(pts/0)联系在一起，如果终端退出，后台进程随之也会退出
+
+//即使退出终端也可以后台运行的办法
+//nohup命令会运行一个命令来阻止所有发送给该进程的SIGHUP信号，这会在退出终端会话时阻止进程退出
+
+nohup ./test.sh &  //nohup会解除终端和进程的关联，进程也就不再同STDOUT和STDERR联系在一起
+
+//定时运行脚本命令
+at、cron表
  
   
 
