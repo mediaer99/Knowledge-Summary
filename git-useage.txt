@@ -191,6 +191,28 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx git rebase xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 	git rebase -i (start_commit _id  end_commit_id]
 
+然后可能会出现：
+		pick e7ba81d Commit-1
+		pick 5756e15 Commit-2
+		pick b1b8189 Commit-3
+
+	如果合并到一条commit并提交，可以修改为：
+		pick e7ba81d Commit-1
+		s 5756e15 Commit-2
+		s b1b8189 Commit-3
+
+	这样得到的就是一个Commit-1, commit 信息包含 Commit1 ~ 3
+
+然后会出现：
+	HEAD detached at 0e55424()
+现在出现分支游离，HEAD指针不指向任何分支
+
+解决办法：
+	1. git branch temp_branch 0e55424
+	2. git checkout branch_name/to/commit
+	3. git merge temp_branch
+	4. git push (branch_name/to/commit)
+
 pick：  保留该commit（缩写:p）
 reword：保留该commit，但我需要修改该commit的注释（缩写:r）
 edit：  保留该commit, 但我要停下来修改该提交(不仅仅修改注释)（缩写:e）
@@ -198,6 +220,8 @@ squash：将该commit和前一个commit合并（缩写:s）
 fixup： 将该commit和前一个commit合并，但不要保留该提交的注释信息（缩写:f）
 exec：  执行shell命令（缩写:x）
 drop：  我要丢弃该commit（缩写:d)
+
+
 
 
 2. 使用git rebase将某一段commit(多个)粘贴到另一个分支上
@@ -263,3 +287,45 @@ git checkout new_branch  ab1f23da
 [remote "origin"]
 	url = https://github.com/schacon/simplegit-p
 	fetch = +refs/heads/*:refs/remotes/origin
+
+xxxxxxxxxxxxxxxxxxxxxxx git 查看文件改动 xxxxxxxxxxxxxxxxxxxxxx
+git-diff - Show changes between commits, commit and working tree, etc
+
+git diff:				比较工作区和暂存区
+git diff --cached:		比较暂存区与最新本地版本库（本地库中最近一次commit的内容）	
+git diff HEAD:			比较工作区与最新本地版本库
+
+比较工作区与指定commit-id的差异
+
+　　git diff commit-id  [<path>...] 
+
+比较暂存区与指定commit-id的差异
+
+　　git diff --cached [<commit-id>] [<path>...] 
+
+比较两个commit-id之间的差异
+
+　　git diff [<commit-id>] [<commit-id>]
+
+
+使用git diff打补丁
+
+git diff > xx.patch
+
+git diff --cached > xx.patch 	//是将我们暂存区与版本库的差异做成补丁
+
+git diff --HEAD > xx.patch 		//是将工作区与版本库的差异做成补丁
+
+git diff Testfile > xx.patch 	//将单个文件做成一个单独的补丁
+
+
+拓展：git apply xx.patch 应用补丁
+
+检验一下补丁能否应用，
+	
+	git apply --check patch 
+
+如果没有任何输出，那么表示可以顺利接受这个补丁
+
+另外可以使用git apply --reject patch将能打的补丁先打上，有冲突的会生成.rej文件，此时可以找到这些文件进行手动打补丁
+
