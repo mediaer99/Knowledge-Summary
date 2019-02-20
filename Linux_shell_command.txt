@@ -379,5 +379,42 @@ nohup ./test.sh &  //nohup会解除终端和进程的关联，进程也就不再
 //定时运行脚本命令
 at、cron表
  
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx Linux后台任务管理 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   
+1. &
 
+watch  -n 10 sh  test.sh  &  //每10s在后台执行一次test.sh脚本
+
+2. jobs
+
+查看当前有多少在后台运行的命令
+jobs -l //显示所有任务的PID
+jobs的状态：running, stopped, Terminated
+但是如果任务被终止了（kill），shell 从当前的shell环境已知的列表中删除任务的进程标识
+
+3. fg
+
+可将后台中的命令调至前台继续运行，如果有多个命令使用：
+
+fg % job_number(命令编号) 将选中的命令调出
+
+例如：
+[1]-   Stopped  watch -n 3 sh del.sh
+[2]+   Stopped  watch -n 3 date
+[3]    Running  nohup watch -n 3 date &
+
+4. bg
+
+将一个在后台暂停的命令，变成在后台继续执行
+如果后台中有多个命令，可以用bg %jobnumber将选中的命令调出
+
+5. kill
+
+法子1：通过jobs命令查看job号（假设为num），然后执行kill %num
+法子2：通过ps命令查看job的进程号（PID，假设为pid），然后执行kill pid
+
+前台进程的终止：Ctrl+c
+
+6. Ctrl + z
+
+可以将一个正在前台执行的命令放到后台，并且处于暂停状态, bg命令可以使其继续在后台执行
