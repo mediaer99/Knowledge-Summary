@@ -22,6 +22,12 @@ unalias ll        //取消ll别名
 ###### tee命令总结 ######
 ###### indent命令总结 ######
 
+###### mkdir #########
+mkdir -p $HOME/go_projects/{src,pkg,bin}
+
+ctrl + r //反向搜索历史输入命令
+
+
 ###### pushd、popd、dirs命令总结 ######
 pushd：
 1.每次pushd命令执行完成之后，默认都会执行一个dirs命令来显示目录栈的内容

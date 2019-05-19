@@ -1,4 +1,4 @@
-﻿###### 应用文件变动 ######
+###### 应用文件变动 ######
 git apply xx.diff
 
 ############################## git reset & revert ##################################
@@ -185,6 +185,10 @@ git show [commit]:[filename]  //某次提交某个文件的内容
 
 
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx git rebase xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+一点记录：
+
+
+
 简要概括为：可以对某一段线性提交历史进行编辑、删除、复制、粘贴
 
 1.使用git rebase 合并多个commit为一个commit
