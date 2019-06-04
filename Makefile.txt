@@ -438,6 +438,13 @@ int main(void)
 gcc -o test test.c -DDEBUG
 这样编译出来的可执行文件test，就能够打印调试信息，而不用每次修改源代码来添加添加调试信息
 
+//Makefile
+ifeq ($(debug), yes) // ifeq ($(debug), 1)
+CFLAGS:=-DDEBUG
+endif
+test:test.c
+  gcc $(CFLAGS) $< -o $@
+  
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  Makefile获取文件路径的写法  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //makefile
 CROSS = 
