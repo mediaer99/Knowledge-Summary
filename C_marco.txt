@@ -90,11 +90,22 @@ __VA_ARGS__ 是一个可变参数的宏,这个可变参数的宏是新的C99规�
         printf(fmt, __VA_ARGS);			\
     } while (0)
 
+
 写法四：
+#define  LOGI(fmt, var...)                            \
+    do {                                             \
+        printf("FILE:%s,FUN:%s, LINE:%d" fmt "\n",    \
+            __FILE__,                                \
+            __FUNC__,                                \
+            __LINE__,                                \
+            ##var);                                  \
+    } while (0)
+
+写法五：
 
 #define  LOGI(fmt, ...) 						\
     do {          								\
-        printf("FILE:%s,FUN:%s, LINE:%d"fmt,    \
+        printf("FILE:%s,FUN:%s, LINE:%d" fmt "\n",    \
         	__FILE__,							\
         	__FUNC__,							\
         	__LINE__,							\
@@ -117,12 +128,34 @@ printf(fmt, ...)  //【fmt】是格式化 【...】 是输出
 printf("%d" "%d", 2018, 2019)  //好比这种写法
 
 
+-----------------------------------------------------------------------------------------------------
 
+ 286 /****************************************
+ 287  * for log print
+ 288  *
+ 289  ***************************************/
+ 290 #define LOG_ALL     0
+ 291 #define LOG_INFO    1
+ 292 #define LOG_DEBUG   2
+ 293 #define LOG_ERROR   3
+ 294 
+ 295 static int print_level = LOG_DEBUG;
+ 296 
+ 297 #ifdef MAKEANDROID
+ 298 #define LOGAPI(level, var...) \
+ 299     do { \
+ 300         if (level >= print_level) \
+ 301             ALOGE(var); \
+ 302     }while(0);
+ 303 #else
+ 304 #define LOGAPI(level, fmt, var...) \
+ 305     do { \
+ 306         if (level >= print_level) \
+ 307             printf("[%s:%d] " fmt "\n", __FUNCTION__, __LINE__, ##var); \
+ 308     }while(0);
+ 309 #endif
 
-
-
-
-
+-----------------------------------------------------------------------------------------------------
 
 
 

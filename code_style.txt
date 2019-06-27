@@ -1,0 +1,6 @@
+1. use const whenever you need
+2. 不要追求紧凑的代码，它并不会产生高效的机器码
+3. 先优化数据结构和算法，再优化执行代码
+4. 命名规则，min-lenght && max-information
+5. Windows应用程序标识符通常采用"大小写"混排，如AddChild. Unix应用程序标识符通常采用"小写加下划线"，如add_child
+6. 
