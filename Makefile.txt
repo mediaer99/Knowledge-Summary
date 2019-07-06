@@ -597,3 +597,105 @@ OBJS_C = $(patsubst %.c, %.o, $(SRCS_C))
 --------------------- 
 
 
+---------------------------------------------------------------------------
+Makefile实例之vpath、VPATH使用
+
+vpath %.c src0 src1 ...  //.c后缀的在 src0、src1等目录查找 
+vpath %.cpp srcpp0 srcpp1 //.cpp后缀的在 srcpp0 srcpp1 等目录查找
+vpath %.h include //.h后缀在 include目录查找
+
+VPATH=src src1 //比较笼统，在src src1查找，不做文件类型区分
+
+假设有如下目录i结构：
+
+.
+|-- HWEncoder.cpp
+|-- Android.mk
+|-- enc
+|   |-- common
+|   |   `-- fill_buffer.cpp
+|   |-- tx_enc_fast
+|   |   |-- txvenclib_fast.cpp
+|   |   |-- txvenclib_fast.h
+|   |   |-- parser.cpp
+|   |   |-- parser.h
+|   |   |-- rate_control_fast.cpp
+|   |   `-- rate_control_fast.h
+|-- enc_params.cpp
+|-- enc_params.h
+|-- include
+|   |-- HWEncoder.h
+|   `-- enc_define.h
+|-- libvpcodec.cpp
+|-- Makefile
+`-- vpcodec_1_0.h
+
+
+///////////////////////////////////////////////////////////////////
+只在根目录写一个Makefile，将所有子目录的cpp文件生成目标文件，
+同时打包成为静态库文件
+///////////////////////////////////////////////////////////////////
+ifeq ($(ARM), 1)
+CC=arm-none-linux-gnueabi-g++
+AR=arm-none-linux-gnueabi-ar
+else
+CC=gcc
+AR=ar
+endif
+
+TARGET=libAvcApi.a
+LDFLAGS += -lm
+
+ifeq ($(ARM), 1)
+CFLAGS+=-DARM
+else
+CFLAGS+=-O2 -std=c99
+endif
+CFLAGS+= -g -static
+
+INC_PATH= -I./enc/ -I./include -I./enc/tx_enc_fast -I./enc/common
+
+//目标文件对应的.cpp文件查找路径，注意这里的vpath或VPATH只是导入依赖文件路径，
+//对于源代码中的include头文件，使用gcc、g++编译时只能以 -I 方式引入
+vpath %.cpp .enc/common/:enc/tx_enc_fast/
+
+//目标文件集合
+OBJ = fill_buffer.o libvpcodec.o HWEncoder.o \
+    enc_params.o txvenclib_fast.o rate_control_fast.o \
+      parser.o 
+
+//将所有的.o打包
+../$(TARGET): $(OBJ)
+  $(AR) rcs $@ $^
+  -rm -f *.o
+
+//静态推导，%.o:%d , 可以理解为$(OBJ)里的变量依次按如下规则来编译成目标文件
+//  %.o:%.cpp
+//      $(CC) $(CFLAGS) -c $< -o $@ $(INC_PATH)
+
+//静态推导
+$(OBJ):%.o:%.cpp
+  $(CC) $(CFLAGS) -c $< -o $@ $(INC_PATH)
+
+//伪目标文件，不管目录下是否有同名的clean文件，make clean都要执行
+.PHONY: clean
+clean:
+  -rm -f *.o //-rm执行命令出错继续往下一个执行
+  -rm -f *.a
+
+///////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
