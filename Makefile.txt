@@ -173,7 +173,7 @@ clean:
 第二版makefile
 
 #把所有的目录做成变量，方便修改和移植   
-BIN = ./bin  
+ BIN = ./bin  
  SRC = ./src  
  INC = ./include  
  OBJ = ./obj  
@@ -432,10 +432,12 @@ int main(void)
     int var = 1;
     func(var);
 
+    printf("Current path is %s\n", PWD); //通过makefile传入变量PWD值
+
     return 0;
 }
 这里通过宏开关 _DEBUG_ 来打印信息，这是通过编译时加上 -DDEBUG选项来实现的，-Dxxx(xxx代表你的宏定义)例如
-gcc -o test test.c -DDEBUG
+gcc -o test test.c -DDEBUG -D PWD=\"$(shell pwd)\"
 这样编译出来的可执行文件test，就能够打印调试信息，而不用每次修改源代码来添加添加调试信息
 
 //Makefile
