@@ -1,4 +1,4 @@
-1. 从一个yuv文件中截取5帧
+﻿1. 从一个yuv文件中截取5帧
 
 	//-r 指定抽取的帧率，即从视频中每秒钟抽取图片的数量。1代表每秒抽取一帧
 	//-t 代表持续时间，单位为秒
@@ -39,6 +39,34 @@ ffmpeg -s 3840x2160   -i  input.yuv  -c:v libx264 -x264-params keyint=120:bframe
 //ffmpeg libx264 encoder
 //设置minrate、maxrate相等，控制输出为恒定码率1500k, vbv-bufsize为vbv-maxrate 2倍大小,这样才可以得到期望的目标码率
 ffmpeg -s 1920x1080   -i  input.yuv  -c:v libx264 -x264-params keyint=120:bframes=0:ref=2:qpmin=8:qpmax=51:cabac=1:minrate=1500k:maxrate=1500k:vbv-maxrate=1500k:vbv-bufsize=3000k   -frames 240  -r 30 -y 1500k_ffmpeg.264
+
+6. YUV转换为RGB
+
+    ffmpeg -s 1280x720 -pix_fmt yuv420p -i  input.yuv -pix_fmt rgb24  output.rgb
+
+7. mp4中提取出yuv
+    ffmpeg -i input.mp4 -vcodec rawvideo -an output.yuv
+
+
+8. mp4中截取10s ~ 50s之间的数据
+
+    ffmpeg -i input.mp4 -vcodec copy -acodec copy -ss 00:00:10 -to 00:00:50 output.mp4
+
+9. ffplay播放bgr565be
+
+    ffplay  -x 640 -y 480 -s 3840x2160 -pix_fmt bgr565be -i  4k_bgr565be_1frm.rgb  //将3840x2160大小的bgr565be，以640x480大小播放显示
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
