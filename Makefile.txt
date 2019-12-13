@@ -732,24 +732,11 @@ $(join <str1>, <str2>)
 1. $(var: %.o = %.c) //将等号左边的字符换成右边的字符
 2. $(var: .o = .c)
 ///////////////////////////////////////////////////////////////////
+<<<<<<< HEAD
 
 Makefile变量赋值
 
 :=  //立即赋值，会覆盖前面的值
 ?=  //若前面没有定义该变量，则此处赋值
 +=  //追加赋值
-
-
-
-
-hello_world.c  bootcode.s    output_trickbox.c  pagetables.s  retarget-gcc.c  stackheap.s  vectors.s
-
-
-
-
-
-
-
-
-
 
