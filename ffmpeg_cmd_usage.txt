@@ -56,6 +56,10 @@ ffmpeg -s 1920x1080   -i  input.yuv  -c:v libx264 -x264-params keyint=120:bframe
 
     ffplay  -x 640 -y 480 -s 3840x2160 -pix_fmt bgr565be -i  4k_bgr565be_1frm.rgb  //将3840x2160大小的bgr565be，以640x480大小播放显示
 
+10. 从mp4中提取format为yuv420p的yuv数据
+
+    ffmpeg -i input.mp4 -pix_fmt yuv420p -an output_I420P.yuv
+
 
 
 
