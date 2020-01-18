@@ -8,17 +8,67 @@ d N 		- Deletes breakpoint number N
 
 info break  - list breakpoints
 r           - Runs the program until a breakpoint or error
-c           - Continues running the program until the next breakpoint or error
-f           - Runs until the current function is finished
+* c           - Continues running the program until the next breakpoint or error
+* f           - Runs until the current function is finished
 
-s           - Runs the next line of the program
-s N         - Runs the next N lines of the program
-n           - like s, but it does not step into functions
-u N         - Runs until you get N lines in front of the current line
-p var       - Prints the current value of the variable "var"
+* s           - Runs the next line of the program
+* s N         - Runs the next N lines of the program
+* n           - like s, but it does not step into functions
+* u N         - Runs until you get N lines in front of the current line
+* p var       - Prints the current value of the variable "var"
+* p /x var    - 以十六进制形式打印变量值
 
-bt          - prints a stack trace
-u           - Goes up a level in the stack
-d           - Goes down a level in the stack	
+* bt          - prints a stack trace
+* u           - Goes up a level in the stack
+* d           - Goes down a level in the stack
 
-q           - Quits gdb
+* b line_num; j line_num  - 在line_num设置断点，然后跳转到line_num执行
+
+二、调试宏
+在GDB下, 我们无法print宏定义，因为宏是预编译的。
+但是我们还是有办法来调试宏，这个需要GCC的配合。
+在GCC编译程序的时候，加上
+  -ggdb3   参数，这样，你就可以调试宏了。
+
+另外，你可以使用下述的GDB的宏调试命令 来查看相关的宏。
+info macro   查看这个宏在哪些文件里被引用了，以及宏定义是什么样的。
+macro         查看宏展开的样子。
+
+* gdb和shell切换，在gdb中输入shell，切换到shell环境，在shell中输入exit返回到gdb
+  gdb:shell  --> shell，shell:exit  --> gdb
+
+* info macro  - information about macro 
+* macro	      - unfold the macro
+
+* q           - Quits gdb
+
+
+* set args xxx	- set the input args xxx
+* show args	- show the input args
+
+* info program	- Display the information about the status of your program: whether it is running or not,
+		  what process it is,and why it stopped
+
+
+(gdb) run $(cat arg.txt)			- read argument from arg.txt after gdb running
+xargs --arg-file arg.txt gdb --args ./binary	- read argument from arg.txt before gdb running 
+
+
+multi-thread debug（https://sourceware.org/gdb/current/onlinedocs/gdb/Threads.html）
+
+* thread thread-id				- Switch among threads by thread-id
+* info threads					- inquire about existing threads
+* thread apply [thread-id-list | all] args	- apply a command to a list of threads
+* set libthread-db-search-path path		- which lets the user specify which libthread_db to use if the default choice isn’t compatible with the program
+* info threads					- 
+
+
+
+
+
+
+
+
+
+
+

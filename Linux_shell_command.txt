@@ -1,4 +1,4 @@
-###### cp命令总结 ###### 
+﻿###### cp命令总结 ###### 
 -u, --update
 copy only when the SOURCE file is newer than the destination file or when the destination file is missing
 
@@ -424,3 +424,20 @@ fg % job_number(命令编号) 将选中的命令调出
 6. Ctrl + z
 
 可以将一个正在前台执行的命令放到后台，并且处于暂停状态, bg命令可以使其继续在后台执行
+
+
+==================================== Linux进程 ========================================
+1.strace
+2.pstack
+3.pstree
+4.gdb
+5. /proc/pid/xxx,包含很多进程相关的信息
+/proc/pid/environ：包含了进程的可用环境变量的列表
+/proc/pid/fd：包含了进程打开的每一个文件的来链接
+/proc/pid/stat：包含了进程的所有状态信息、进程号、父进程号等
+/proc/pid/cmdline：保存了进程的完成命令
+/proc/pid/cwd：符号连接，指向进程当前的工作目录
+/proc/pid/exe：符号连接，指向正在进程中运行的程序
+/proc/pid/mem：包含了进程在内存的内容
+/proc/pid/statm：包含了进程的内存使用信息
+

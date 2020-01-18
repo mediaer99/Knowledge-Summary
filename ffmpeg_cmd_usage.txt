@@ -56,8 +56,43 @@ ffmpeg -s 1920x1080   -i  input.yuv  -c:v libx264 -x264-params keyint=120:bframe
 
     ffplay  -x 640 -y 480 -s 3840x2160 -pix_fmt bgr565be -i  4k_bgr565be_1frm.rgb  //将3840x2160大小的bgr565be，以640x480大小播放显示
 
+10. 从mp4中提取format为yuv420p的yuv数据
+
+    ffmpeg -i input.mp4 -pix_fmt yuv420p -an output_I420P.yuv
+
+11. yuv转hex、hex转yuv
+
+    xxd -p in.yuv out.hex         // yuv --> hex
+    xxd -p -r out.hex in.yuv      // hex --> yuv
+
+12. FFMpeg录屏
+
+1) 最简单的抓屏
+
+ffmpeg -f gdigrab -i desktop out.mpg
 
 
+
+2) 以15的帧率抓屏20秒，保存为视频格式是vp9的mkv文件
+
+ffmpeg -f gdigrab -t 20 -r 15 -i desktop -vcodec libvpx-vp9 capture-vp9.mkv
+
+
+
+3) 以15的帧率抓屏10秒，保存为视频格式是vp9，分辨率是720x420的mkv文件
+
+ffmpeg -f gdigrab -t 10 -r 15 -i desktop -vcodec libvpx-vp9 -s 720x420 vp9-720-420.mkv
+
+
+
+4) 以15的帧率抓屏20秒，抓屏范围，以点（100,60）开始，大小600x480，保存为视频格式是264的mp4文件
+
+ffmpeg -f gdigrab -video_size 600x480 -offset_x 100 -offset_y 60 -t 20 -r 15 -i desktop -vcodec libx264 x264.mp4
+
+
+13. ffmpeg解码es流
+
+    ffmpeg.exe  -i 1080P_5frms_I420P_BJOpera.hevc -f rawvideo 1080p_BJ.yuv //默认输出NV12
 
 
 
