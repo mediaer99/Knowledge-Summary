@@ -72,3 +72,16 @@ multi-thread debug£¨https://sourceware.org/gdb/current/onlinedocs/gdb/Threads.ht
 
 
 
+q           - Quits gdb
+
+
+set args xxx	- set the input args xxx
+show args	- show the input args
+
+info program	- Display the information about the status of your program: whether it is running or not,
+		  what process it is,and why it stopped
+
+
+(gdb) run $(cat arg.txt)			- read argument from arg.txt after gdb running
+xargs --arg-file arg.txt gdb --args ./binary	- read argument from arg.txt before gdb running 
+
