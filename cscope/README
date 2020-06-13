@@ -1,3 +1,9 @@
+cscope如何添加数据库？以vim中为例
+:cs add /path/of/cscope.out //添加cscope数据库，可以添加多个cscope数据库
+:cs reset //重置cscope数据库
+:cs show  //显示cscope数据库，包括编号信息等
+:cs kill num //要杀掉的数据库编号
+
 How to create cscope for your project?
 Taking linux kernel for example.
 
