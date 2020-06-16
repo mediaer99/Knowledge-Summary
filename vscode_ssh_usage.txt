@@ -1,0 +1,33 @@
+VSCode配置SSH:
+1. 管理员身份启动powershell
+2. Get-WindowsCapability -Online | ? Name -like 'OpenSSH*'
+3. Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+4. Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+
+SSH服务器初始配置：
+1. Start-Service sshd
+2. Set-Service -Name sshd -StartupType 'Automatic'
+3. Get-NetFirewallRule -Name *ssh*
+4. New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+
+Remote login:
+ssh username@10.122.82.2
+
+
+VSCode配置SSH：参考
+https://docs.microsoft.com/zh-cn/windows-server/administration/openssh/openssh_install_firstuse
+
+https://code.visualstudio.com/docs/remote/ssh#_getting-started
+
+
+ssh无密码远程登陆
+1. 首先在客户端生成ssh密钥，打开命令行工具，可以使用git的git bash
+    ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
+    cd ~/.ssh 
+    cat id_rsa.pub  //查看
+
+2. ssh-copy-id  username@IP
+例如 ssh-copy-id username@192.168.1.1
+会自动把公钥传输到服务端的$HOME/.ssh/authorized_keys文件夹里
+
+3. 下次登陆无需输入密码
