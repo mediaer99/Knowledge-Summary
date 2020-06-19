@@ -1,4 +1,4 @@
-###### 应用文件变动 ######
+﻿###### 应用文件变动 ######
 git apply xx.diff
 
 ############################## git reset & revert ##################################
@@ -333,3 +333,18 @@ git diff Testfile > xx.patch 	//将单个文件做成一个单独的补丁
 
 另外可以使用git apply --reject patch将能打的补丁先打上，有冲突的会生成.rej文件，此时可以找到这些文件进行手动打补丁
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx git pull 产生的 Merge branch of ... xxxxxxxxxxxxxxxxxxxx
+当前分支结构如下：
+
+a - b -c (master)
+    |
+    d(origin/master)
+
+情景如下：
+本地拉取的最新remote版本是 b，并且在b的基础之上提交本地仓库，节点到达c，并未push到远程仓库
+其他开发者在b的基础上提交d，并且已经merge入远程仓库，这样本地git pull就会出现Merge branch of..的问题，甚至是冲突
+
+git pull = git fetch + git merge
+
+解决办法：1. git pull --rebase,执行变基，有冲突手动解决
+          2. git config --global pull.rebase true
