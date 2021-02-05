@@ -21,6 +21,12 @@ r           - Runs the program until a breakpoint or error
 * bt          - prints a stack trace
 * u           - Goes up a level in the stack
 * d           - Goes down a level in the stack
+* bt full    - 查看详细的栈信息
+* info threads	- 查看所有线程信息
+* thread <num>	- 跳转到线程<num>
+* f <num>	- 跳转到某个栈中位置
+* i locals		- 显示当前调用栈的所有变量
+* i register		- 显示当前调用栈的寄存器值，主要看地址
 
 * b line_num; j line_num  - 在line_num设置断点，然后跳转到line_num执行
 
@@ -62,16 +68,6 @@ multi-thread debug（https://sourceware.org/gdb/current/onlinedocs/gdb/Threads.ht
 * set libthread-db-search-path path		- which lets the user specify which libthread_db to use if the default choice isn’t compatible with the program
 * info threads					- 
 
-
-
-
-
-
-
-
-
-
-
 q           - Quits gdb
 
 
@@ -85,3 +81,8 @@ info program	- Display the information about the status of your program: whether
 (gdb) run $(cat arg.txt)			- read argument from arg.txt after gdb running
 xargs --arg-file arg.txt gdb --args ./binary	- read argument from arg.txt before gdb running 
 
+**** gdb启动带运行参数的可执行程序 *****
+gdb --args demo.exe 参数0 参数1
+
+**** 编译器开启栈保护, 栈乱序可以第一时间dump出现场 ****
+-fstack-protector , -fstack-protector-all

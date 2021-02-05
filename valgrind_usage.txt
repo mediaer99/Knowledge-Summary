@@ -1,0 +1,55 @@
+1.Valgrind官网：
+	https://valgrind.org/
+
+2.代码获取
+The Current (3.13 and later) Repository
+If you want to browse the current repository you can use the web interface.
+
+To clone code from the current repository (anonymous, read-only git access), do this:
+
+  git clone git://sourceware.org/git/valgrind.git
+To build the cloned code, follow the instructions in the README file that the clone should give you. Alternatively, the following should work:
+
+  cd valgrind
+  ./autogen.sh
+  ./configure --prefix=...
+  make
+  make install
+To do the build, you'll need automake version 1.10 or later and a compatible version of autoconf (e.g. 2.68). These should come as standard on any non-ancient Linux distribution.
+
+There is also an http mirror for the repository set up at repo.or.cz. You can use it if you are behind a firewall and cannot tunnel through with socat. To clone from this mirror, do this:
+
+  git clone http://repo.or.cz/valgrind.git
+  
+3. 交叉编译步骤
+（1）cd valgrind
+（2）./autogen.sh
+（3）ARM64编译
+	./configure 
+		--host=aarch64-linux  
+		CC=aarch64-linux-gnu-gcc-7.5.0 
+		--prefix=/home/test/valgrind 
+		CFLAGS=-static
+（4）编译生成的文件在/home/test/valgrind目录下
+（5）编译生成的文件较大，只需要拷贝 valgrind/bin、valgrind/lib即可
+（6）问题描述
+	valgrind运行时，无法找到相关工具文件，具体报错如下
+		valgrind: failed to start tool 'memcheck' for platform 'amd64-linux': No such file or directory
+	解决方法
+		导出VALGRIND_LIB路径，用法如下（假设valgrind已经被安装到/home/test/valgrind目录）：
+	export VALGRIND_LIB=/home/test/valgrind/lib/valgrind
+
+	或者也可以如下方式调用valgrind:
+	VALGRIND_LIB=/home/test/valgrind/lib/valgrind /home/test/valgrind/bin/valgrind --help
+	
+4. 使用示例脚本
+	
+	eg: valgrind --tool-memcheck 可执行程序
+	
+	valgrind
+		--tool=memcheck 
+		--leak-check=full 
+		--show-leak-kinds=all 
+		--undef-value-errors=no 
+		--log-file=log  
+		/opt/bin/sample_venc -w 1920 -h 1080 -i /mnt/1920x1080_cheliangdaolu2_30fps_300f.yuv

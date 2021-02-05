@@ -70,8 +70,13 @@ ffmpeg -s 1920x1080   -i  input.yuv  -c:v libx264 -x264-params keyint=120:bframe
 1) 最简单的抓屏
 
 ffmpeg -f gdigrab -i desktop out.mpg
+ffmpeg -f gdigrab -framerate 30  -video_size 1920x1080  -i desktop output.mkv
+ffmpeg -f gdigrab -framerate 30 -offset_x 10 -offset_y 20 -video_size 640x480 -show_region 1 -i desktop output.mkv
 
-
+//windows查看支持的音视频设备
+ffmpeg -list_devices true -f dshow -i dummy
+例如我的笔记本视频设备：Integrated Webcam，音频设备：麦克风阵列 (Realtek(R) Audio)
+ffmpeg -f dshow -i video="Integrated Webcam":audio="麦克风阵列 (Realtek(R) Audio)" out.mkv
 
 2) 以15的帧率抓屏20秒，保存为视频格式是vp9的mkv文件
 

@@ -449,7 +449,13 @@ CFLAGS:=-DDEBUG
 endif
 test:test.c
   gcc $(CFLAGS) $< -o $@
-  
+
+
+还有一种方法：
+通过Makefile来传递编译参数：比如传递宏 “DEBUG” 到编译参数中去
+本质就是传递参数给到Makefile中的 CFLAGS/CPPFLAGS 变量
+make "CFLAGS += -DDEBUG" //C
+make "CPPFLAGS += -DDEBUG" //C++
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  Makefile获取文件路径的写法  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //makefile
 CROSS = 
